@@ -303,37 +303,3 @@ ORDER BY cnt_type DESC
 
 
 
-	
-
-
---ranking popular category by content_type--	
-WITH cte_cnt AS (SELECT
-	con.category,
-	con.content_type,
-	COUNT( con.content_type) AS cnt_type
-FROM content_new AS con
-INNER JOIN reaction_new AS r
-	ON con.content_id = r.content_id
-INNER JOIN reaction_type_new AS rt
-	ON r.reac_type = rt.reac_type
-GROUP BY con.content_type, con.category	
-ORDER BY con.category, COUNT( con.content_type) DESC
-)
-SELECT 
-	category,
-	content_type,
-	cnt_type,
-	RANK () OVER (PARTITION BY category ORDER BY cnt_type DESC)
-FROM cte_cnt
-
-
-	
----trying concat---
-
-SELECT 
-	CONCAT (category, ' ', '(', UPPER (LEFT (category,1)), ')')
-FROM content_new
-
-
-
-
